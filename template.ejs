@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Monitoreo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --card: #f2f2f2;
+      --button-bg: #007BFF;
+      --button-text: #ffffff;
+    }
+
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #f5f5f5;
+      --card: #2c2c2c;
+      --button-bg: #1a73e8;
+      --button-text: #ffffff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 8px;
+      text-align: center;
+    }
+    th { background-color: var(--card); }
+
+    .fail { color: red; font-weight: bold; }
+    .pass { color: green; font-weight: bold; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #888;
+      cursor: pointer;
+    }
+    .tab {
+      padding: 10px 20px;
+      border: 1px solid #888;
+      border-bottom: none;
+      margin-right: 5px;
+      background: var(--card);
+      font-weight: bold;
+      color: var(--text);
+      border-radius: 6px 6px 0 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    .tab.active {
+      background: var(--bg);
+      border-top: 3px solid #007BFF;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #888;
+      background: var(--bg);
+      border-radius: 0 6px 6px 6px;
+    }
+    .tab-content.active { display: block; }
+
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      margin-top: 40px;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .top-buttons button {
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .top-buttons button:hover {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-buttons">
+    <button id="themeToggle">Cambiar Tema</button>
+  </div>
+
+  <h1>Reporte de Monitoreo</h1>
+
+  <p><strong>Fecha de ejecución:</strong> <%= metrics[0].time.split("T")[0] %></p>
+  <p>Estado final: <span class="<%= status.toLowerCase() %>"><%= status %></span></p>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="resumen">Resumen</div>
+    <div class="tab" data-tab="graficos">Gráficos</div>
+    <div class="tab" data-tab="historico">Histórico</div>
+  </div>
+
+  <!-- TAB: Resumen -->
+  <div class="tab-content active" id="resumen">
+    <h2>Resumen</h2>
+    <table>
+      <tr><th>Métrica</th><th>Min</th><th>Max</th><th>Final</th></tr>
+      <tr>
+        <td>CPU (%)</td>
+        <td><%= minCPU.toFixed(2) %></td>
+        <td><%= maxCPU.toFixed(2) %></td>
+        <td><%= finalCPU.toFixed(2) %></td>
+      </tr>
+      <tr>
+        <td>RAM (%)</td>
+        <td><%= minRAM.toFixed(2) %></td>
+        <td><%= maxRAM.toFixed(2) %></td>
+        <td><%= finalRAM.toFixed(2) %></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TAB: Gráficos -->
+  <div class="tab-content" id="graficos">
+    <h2>Gráficos de Monitoreo</h2>
+
+    <div class="chart-container">
+      <canvas id="cpuChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="ramChart"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB: Histórico -->
+  <div class="tab-content" id="historico">
+    <h2>Histórico Detallado</h2>
+    <table>
+      <tr><th>Hora</th><th>CPU (%)</th><th>RAM (%)</th></tr>
+      <% metrics.forEach(function(m) { 
+           let hour = m.time.split("T")[1].split(".")[0]; 
+      %>
+      <tr>
+        <td><%= hour %></td>
+        <td><%= m.cpu.toFixed(2) %></td>
+        <td><%= m.ram.toFixed(2) %></td>
+      </tr>
+      <% }); %>
+    </table>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    /* --- MODO OSCURO --- */
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark");
+    }
+
+    themeToggle.onclick = () => {
+      body.classList.toggle("dark");
+      localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "light");
+    };
+
+    /* --- TABS --- */
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.tab;
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        contents.forEach(c => {
+          c.classList.remove("active");
+          if (c.id === target) c.classList.add("active");
+        });
+      });
+    });
+
+    /* --- DATOS PARA LOS GRÁFICOS (solo hora) --- */
+    const labels = <%- JSON.stringify(metrics.map(m => m.time.split("T")[1].split(".")[0])) %>;
+    const cpuData = <%- JSON.stringify(metrics.map(m => m.cpu)) %>;
+    const ramData = <%- JSON.stringify(metrics.map(m => m.ram)) %>;
+
+    /* --- CHART CPU --- */
+    new Chart(document.getElementById('cpuChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'CPU (%)',
+          data: cpuData,
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    /* --- CHART RAM --- */
+    new Chart(document.getElementById('ramChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'RAM (%)',
+          data: ramData,
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  </script>
+
+</body>
+</html>

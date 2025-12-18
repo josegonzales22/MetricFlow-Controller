@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Monitoreo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    :root {
+      --bg: #ffffff;
+      --text: #000000;
+      --card: #f2f2f2;
+      --button-bg: #007BFF;
+      --button-text: #ffffff;
+    }
+
+    body.dark {
+      --bg: #1e1e1e;
+      --text: #f5f5f5;
+      --card: #2c2c2c;
+      --button-bg: #1a73e8;
+      --button-text: #ffffff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #555;
+      padding: 8px;
+      text-align: center;
+    }
+    th { background-color: var(--card); }
+
+    .fail { color: red; font-weight: bold; }
+    .pass { color: green; font-weight: bold; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #888;
+      cursor: pointer;
+    }
+    .tab {
+      padding: 10px 20px;
+      border: 1px solid #888;
+      border-bottom: none;
+      margin-right: 5px;
+      background: var(--card);
+      font-weight: bold;
+      color: var(--text);
+      border-radius: 6px 6px 0 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    .tab.active {
+      background: var(--bg);
+      border-top: 3px solid #007BFF;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 1px solid #888;
+      background: var(--bg);
+      border-radius: 0 6px 6px 6px;
+    }
+    .tab-content.active { display: block; }
+
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      margin-top: 40px;
+    }
+
+    .top-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .top-buttons button {
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .top-buttons button:hover {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-buttons">
+    <button id="themeToggle">Cambiar Tema</button>
+  </div>
+
+  <h1>Reporte de Monitoreo</h1>
+
+  <p><strong>Fecha de ejecución:</strong> 2025-11-26</p>
+  <p>Estado final: <span class="pass">PASS</span></p>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="resumen">Resumen</div>
+    <div class="tab" data-tab="graficos">Gráficos</div>
+    <div class="tab" data-tab="historico">Histórico</div>
+  </div>
+
+  <!-- TAB: Resumen -->
+  <div class="tab-content active" id="resumen">
+    <h2>Resumen</h2>
+    <table>
+      <tr><th>Métrica</th><th>Min</th><th>Max</th><th>Final</th></tr>
+      <tr>
+        <td>CPU (%)</td>
+        <td>2.70</td>
+        <td>10.58</td>
+        <td>2.80</td>
+      </tr>
+      <tr>
+        <td>RAM (%)</td>
+        <td>31.79</td>
+        <td>32.36</td>
+        <td>32.23</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- TAB: Gráficos -->
+  <div class="tab-content" id="graficos">
+    <h2>Gráficos de Monitoreo</h2>
+
+    <div class="chart-container">
+      <canvas id="cpuChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="ramChart"></canvas>
+    </div>
+  </div>
+
+  <!-- TAB: Histórico -->
+  <div class="tab-content" id="historico">
+    <h2>Histórico Detallado</h2>
+    <table>
+      <tr><th>Hora</th><th>CPU (%)</th><th>RAM (%)</th></tr>
+      
+      <tr>
+        <td>22:38:47</td>
+        <td>2.87</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:38:52</td>
+        <td>2.87</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:38:57</td>
+        <td>2.87</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:02</td>
+        <td>3.19</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:07</td>
+        <td>3.19</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:12</td>
+        <td>3.19</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:17</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:22</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:27</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:32</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:37</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:42</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:47</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:52</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:39:57</td>
+        <td>3.10</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:02</td>
+        <td>3.04</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:07</td>
+        <td>3.04</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:12</td>
+        <td>3.04</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:17</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:22</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:27</td>
+        <td>3.13</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:32</td>
+        <td>3.22</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:37</td>
+        <td>3.22</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:42</td>
+        <td>3.22</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:47</td>
+        <td>2.89</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:52</td>
+        <td>2.89</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:40:57</td>
+        <td>2.89</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:02</td>
+        <td>2.88</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:07</td>
+        <td>2.88</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:12</td>
+        <td>2.88</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:17</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:22</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:27</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:32</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:37</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:42</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:47</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:52</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:41:57</td>
+        <td>3.00</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:02</td>
+        <td>2.94</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:07</td>
+        <td>2.94</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:12</td>
+        <td>2.94</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:17</td>
+        <td>3.18</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:22</td>
+        <td>3.18</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:27</td>
+        <td>3.18</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:32</td>
+        <td>3.14</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:37</td>
+        <td>3.14</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:42</td>
+        <td>3.14</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:47</td>
+        <td>3.34</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:52</td>
+        <td>3.34</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:42:57</td>
+        <td>3.34</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:02</td>
+        <td>3.28</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:07</td>
+        <td>3.28</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:12</td>
+        <td>3.28</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:17</td>
+        <td>3.40</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:22</td>
+        <td>3.40</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:27</td>
+        <td>3.40</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:32</td>
+        <td>3.47</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:37</td>
+        <td>3.47</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:42</td>
+        <td>3.47</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:47</td>
+        <td>3.48</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:52</td>
+        <td>3.48</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:43:57</td>
+        <td>3.48</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:02</td>
+        <td>3.25</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:07</td>
+        <td>3.25</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:12</td>
+        <td>3.25</td>
+        <td>31.90</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:17</td>
+        <td>3.44</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:22</td>
+        <td>3.44</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:27</td>
+        <td>3.44</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:32</td>
+        <td>3.26</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:37</td>
+        <td>3.26</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:42</td>
+        <td>3.26</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:47</td>
+        <td>3.24</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:52</td>
+        <td>3.24</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:44:57</td>
+        <td>3.24</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:02</td>
+        <td>3.19</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:07</td>
+        <td>3.19</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:12</td>
+        <td>3.19</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:17</td>
+        <td>3.18</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:22</td>
+        <td>3.18</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:27</td>
+        <td>3.18</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:32</td>
+        <td>3.15</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:37</td>
+        <td>3.15</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:42</td>
+        <td>3.15</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:47</td>
+        <td>3.08</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:52</td>
+        <td>3.08</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:45:57</td>
+        <td>3.08</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:02</td>
+        <td>2.94</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:07</td>
+        <td>2.94</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:12</td>
+        <td>2.94</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:17</td>
+        <td>2.99</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:22</td>
+        <td>2.99</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:27</td>
+        <td>2.99</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:32</td>
+        <td>2.97</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:37</td>
+        <td>2.97</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:42</td>
+        <td>2.97</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:47</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:52</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:46:57</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:02</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:07</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:12</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:17</td>
+        <td>2.95</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:22</td>
+        <td>2.95</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:27</td>
+        <td>2.95</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:32</td>
+        <td>2.93</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:37</td>
+        <td>2.93</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:42</td>
+        <td>2.93</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:47</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:53</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:47:58</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:03</td>
+        <td>2.85</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:08</td>
+        <td>2.85</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:13</td>
+        <td>2.85</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:18</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:23</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:28</td>
+        <td>2.91</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:33</td>
+        <td>2.87</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:38</td>
+        <td>2.87</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:43</td>
+        <td>2.87</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:48</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:53</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:48:58</td>
+        <td>2.88</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:03</td>
+        <td>2.77</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:08</td>
+        <td>2.77</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:13</td>
+        <td>2.77</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:18</td>
+        <td>2.81</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:23</td>
+        <td>2.81</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:28</td>
+        <td>2.81</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:33</td>
+        <td>2.79</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:38</td>
+        <td>2.79</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:43</td>
+        <td>2.79</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:48</td>
+        <td>2.76</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:53</td>
+        <td>2.76</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:49:58</td>
+        <td>2.76</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:03</td>
+        <td>2.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:08</td>
+        <td>2.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:13</td>
+        <td>2.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:18</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:23</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:28</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:33</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:38</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:43</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:48</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:53</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:50:58</td>
+        <td>2.81</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:03</td>
+        <td>2.76</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:08</td>
+        <td>2.76</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:13</td>
+        <td>2.76</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:18</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:23</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:28</td>
+        <td>2.78</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:33</td>
+        <td>2.79</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:38</td>
+        <td>2.79</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:43</td>
+        <td>2.79</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:48</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:53</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:51:58</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:03</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:08</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:13</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:18</td>
+        <td>3.01</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:23</td>
+        <td>3.01</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:28</td>
+        <td>3.01</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:33</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:38</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:43</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:48</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:53</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:52:58</td>
+        <td>2.98</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:03</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:08</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:13</td>
+        <td>2.96</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:18</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:23</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:28</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:33</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:38</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:43</td>
+        <td>2.99</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:48</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:53</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:53:58</td>
+        <td>2.77</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:03</td>
+        <td>2.73</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:08</td>
+        <td>2.73</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:13</td>
+        <td>2.73</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:18</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:23</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:28</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:33</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:38</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:43</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:48</td>
+        <td>2.86</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:53</td>
+        <td>2.86</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:54:58</td>
+        <td>2.86</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:03</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:08</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:13</td>
+        <td>2.82</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:18</td>
+        <td>2.84</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:23</td>
+        <td>2.84</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:28</td>
+        <td>2.84</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:33</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:38</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:43</td>
+        <td>2.83</td>
+        <td>31.79</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:48</td>
+        <td>3.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:53</td>
+        <td>3.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:55:58</td>
+        <td>3.73</td>
+        <td>31.80</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:03</td>
+        <td>4.68</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:08</td>
+        <td>4.68</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:13</td>
+        <td>4.68</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:18</td>
+        <td>5.81</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:23</td>
+        <td>5.81</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:28</td>
+        <td>5.81</td>
+        <td>31.81</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:33</td>
+        <td>6.94</td>
+        <td>31.83</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:38</td>
+        <td>6.94</td>
+        <td>31.83</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:43</td>
+        <td>6.94</td>
+        <td>31.83</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:48</td>
+        <td>8.08</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:53</td>
+        <td>8.08</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:56:58</td>
+        <td>8.08</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:03</td>
+        <td>9.12</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:08</td>
+        <td>9.12</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:13</td>
+        <td>9.12</td>
+        <td>31.84</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:18</td>
+        <td>10.32</td>
+        <td>31.86</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:23</td>
+        <td>10.32</td>
+        <td>31.86</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:28</td>
+        <td>10.32</td>
+        <td>31.86</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:33</td>
+        <td>10.47</td>
+        <td>31.88</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:38</td>
+        <td>10.47</td>
+        <td>31.88</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:43</td>
+        <td>10.47</td>
+        <td>31.88</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:48</td>
+        <td>10.52</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:53</td>
+        <td>10.52</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:57:58</td>
+        <td>10.52</td>
+        <td>31.91</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:03</td>
+        <td>10.55</td>
+        <td>31.92</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:08</td>
+        <td>10.55</td>
+        <td>31.92</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:13</td>
+        <td>10.55</td>
+        <td>31.92</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:18</td>
+        <td>10.58</td>
+        <td>31.94</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:23</td>
+        <td>10.58</td>
+        <td>31.94</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:28</td>
+        <td>10.58</td>
+        <td>31.94</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:33</td>
+        <td>10.53</td>
+        <td>31.97</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:38</td>
+        <td>10.53</td>
+        <td>31.97</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:44</td>
+        <td>10.53</td>
+        <td>31.97</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:49</td>
+        <td>10.58</td>
+        <td>32.00</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:54</td>
+        <td>10.58</td>
+        <td>32.00</td>
+      </tr>
+      
+      <tr>
+        <td>22:58:59</td>
+        <td>10.58</td>
+        <td>32.00</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:04</td>
+        <td>10.39</td>
+        <td>32.02</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:09</td>
+        <td>10.39</td>
+        <td>32.02</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:14</td>
+        <td>10.39</td>
+        <td>32.02</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:19</td>
+        <td>10.42</td>
+        <td>32.04</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:24</td>
+        <td>10.42</td>
+        <td>32.04</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:29</td>
+        <td>10.42</td>
+        <td>32.04</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:34</td>
+        <td>10.45</td>
+        <td>32.07</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:39</td>
+        <td>10.45</td>
+        <td>32.07</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:44</td>
+        <td>10.45</td>
+        <td>32.07</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:49</td>
+        <td>10.37</td>
+        <td>32.10</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:54</td>
+        <td>10.37</td>
+        <td>32.10</td>
+      </tr>
+      
+      <tr>
+        <td>22:59:59</td>
+        <td>10.37</td>
+        <td>32.10</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:04</td>
+        <td>10.22</td>
+        <td>32.11</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:09</td>
+        <td>10.22</td>
+        <td>32.11</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:14</td>
+        <td>10.22</td>
+        <td>32.11</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:19</td>
+        <td>9.57</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:24</td>
+        <td>9.57</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:29</td>
+        <td>9.57</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:34</td>
+        <td>8.44</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:39</td>
+        <td>8.44</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:44</td>
+        <td>8.44</td>
+        <td>32.12</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:49</td>
+        <td>7.55</td>
+        <td>32.32</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:54</td>
+        <td>7.55</td>
+        <td>32.32</td>
+      </tr>
+      
+      <tr>
+        <td>23:00:59</td>
+        <td>7.55</td>
+        <td>32.32</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:04</td>
+        <td>6.52</td>
+        <td>32.34</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:09</td>
+        <td>6.52</td>
+        <td>32.34</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:14</td>
+        <td>6.52</td>
+        <td>32.34</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:19</td>
+        <td>5.48</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:24</td>
+        <td>5.48</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:29</td>
+        <td>5.48</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:34</td>
+        <td>4.40</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:39</td>
+        <td>4.40</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:44</td>
+        <td>4.40</td>
+        <td>32.36</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:49</td>
+        <td>3.77</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:54</td>
+        <td>3.77</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:01:59</td>
+        <td>3.77</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:04</td>
+        <td>3.60</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:09</td>
+        <td>3.60</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:14</td>
+        <td>3.60</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:19</td>
+        <td>3.67</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:24</td>
+        <td>3.67</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:29</td>
+        <td>3.67</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:34</td>
+        <td>3.55</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:39</td>
+        <td>3.55</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:44</td>
+        <td>3.55</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:49</td>
+        <td>3.50</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:54</td>
+        <td>3.50</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:02:59</td>
+        <td>3.50</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:04</td>
+        <td>3.54</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:09</td>
+        <td>3.54</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:14</td>
+        <td>3.54</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:19</td>
+        <td>3.53</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:24</td>
+        <td>3.53</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:29</td>
+        <td>3.53</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:34</td>
+        <td>3.14</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:39</td>
+        <td>3.14</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:44</td>
+        <td>3.14</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:49</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:54</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:03:59</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:04</td>
+        <td>2.88</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:09</td>
+        <td>2.88</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:14</td>
+        <td>2.88</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:19</td>
+        <td>3.40</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:24</td>
+        <td>3.40</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:29</td>
+        <td>3.51</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:34</td>
+        <td>3.38</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:39</td>
+        <td>3.38</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:44</td>
+        <td>3.37</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:49</td>
+        <td>3.27</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:54</td>
+        <td>3.27</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:04:59</td>
+        <td>3.36</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:04</td>
+        <td>3.28</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:09</td>
+        <td>3.28</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:14</td>
+        <td>3.33</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:19</td>
+        <td>3.33</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:24</td>
+        <td>3.33</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:29</td>
+        <td>3.27</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:34</td>
+        <td>3.27</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:39</td>
+        <td>3.27</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:44</td>
+        <td>3.26</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:49</td>
+        <td>3.26</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:54</td>
+        <td>3.26</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:05:59</td>
+        <td>2.70</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:04</td>
+        <td>2.70</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:09</td>
+        <td>2.70</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:14</td>
+        <td>2.78</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:19</td>
+        <td>2.78</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:24</td>
+        <td>2.78</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:29</td>
+        <td>2.79</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:34</td>
+        <td>2.79</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:39</td>
+        <td>2.79</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:44</td>
+        <td>2.80</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:49</td>
+        <td>2.80</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:54</td>
+        <td>2.80</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:06:59</td>
+        <td>2.84</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:04</td>
+        <td>2.84</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:09</td>
+        <td>2.84</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:14</td>
+        <td>2.89</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:19</td>
+        <td>2.89</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:24</td>
+        <td>2.89</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:29</td>
+        <td>2.88</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:34</td>
+        <td>2.88</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:39</td>
+        <td>2.88</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:44</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:49</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:54</td>
+        <td>2.90</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:07:59</td>
+        <td>2.84</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:04</td>
+        <td>2.84</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:09</td>
+        <td>2.84</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:14</td>
+        <td>2.87</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:19</td>
+        <td>2.87</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:24</td>
+        <td>2.87</td>
+        <td>32.22</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:29</td>
+        <td>2.86</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:34</td>
+        <td>2.86</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:39</td>
+        <td>2.86</td>
+        <td>32.23</td>
+      </tr>
+      
+      <tr>
+        <td>23:08:44</td>
+        <td>2.80</td>
+        <td>32.23</td>
+      </tr>
+      
+    </table>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    /* --- MODO OSCURO --- */
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark");
+    }
+
+    themeToggle.onclick = () => {
+      body.classList.toggle("dark");
+      localStorage.setItem("theme", body.classList.contains("dark") ? "dark" : "light");
+    };
+
+    /* --- TABS --- */
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.tab;
+
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        contents.forEach(c => {
+          c.classList.remove("active");
+          if (c.id === target) c.classList.add("active");
+        });
+      });
+    });
+
+    /* --- DATOS PARA LOS GRÁFICOS (solo hora) --- */
+    const labels = ["22:38:47","22:38:52","22:38:57","22:39:02","22:39:07","22:39:12","22:39:17","22:39:22","22:39:27","22:39:32","22:39:37","22:39:42","22:39:47","22:39:52","22:39:57","22:40:02","22:40:07","22:40:12","22:40:17","22:40:22","22:40:27","22:40:32","22:40:37","22:40:42","22:40:47","22:40:52","22:40:57","22:41:02","22:41:07","22:41:12","22:41:17","22:41:22","22:41:27","22:41:32","22:41:37","22:41:42","22:41:47","22:41:52","22:41:57","22:42:02","22:42:07","22:42:12","22:42:17","22:42:22","22:42:27","22:42:32","22:42:37","22:42:42","22:42:47","22:42:52","22:42:57","22:43:02","22:43:07","22:43:12","22:43:17","22:43:22","22:43:27","22:43:32","22:43:37","22:43:42","22:43:47","22:43:52","22:43:57","22:44:02","22:44:07","22:44:12","22:44:17","22:44:22","22:44:27","22:44:32","22:44:37","22:44:42","22:44:47","22:44:52","22:44:57","22:45:02","22:45:07","22:45:12","22:45:17","22:45:22","22:45:27","22:45:32","22:45:37","22:45:42","22:45:47","22:45:52","22:45:57","22:46:02","22:46:07","22:46:12","22:46:17","22:46:22","22:46:27","22:46:32","22:46:37","22:46:42","22:46:47","22:46:52","22:46:57","22:47:02","22:47:07","22:47:12","22:47:17","22:47:22","22:47:27","22:47:32","22:47:37","22:47:42","22:47:47","22:47:53","22:47:58","22:48:03","22:48:08","22:48:13","22:48:18","22:48:23","22:48:28","22:48:33","22:48:38","22:48:43","22:48:48","22:48:53","22:48:58","22:49:03","22:49:08","22:49:13","22:49:18","22:49:23","22:49:28","22:49:33","22:49:38","22:49:43","22:49:48","22:49:53","22:49:58","22:50:03","22:50:08","22:50:13","22:50:18","22:50:23","22:50:28","22:50:33","22:50:38","22:50:43","22:50:48","22:50:53","22:50:58","22:51:03","22:51:08","22:51:13","22:51:18","22:51:23","22:51:28","22:51:33","22:51:38","22:51:43","22:51:48","22:51:53","22:51:58","22:52:03","22:52:08","22:52:13","22:52:18","22:52:23","22:52:28","22:52:33","22:52:38","22:52:43","22:52:48","22:52:53","22:52:58","22:53:03","22:53:08","22:53:13","22:53:18","22:53:23","22:53:28","22:53:33","22:53:38","22:53:43","22:53:48","22:53:53","22:53:58","22:54:03","22:54:08","22:54:13","22:54:18","22:54:23","22:54:28","22:54:33","22:54:38","22:54:43","22:54:48","22:54:53","22:54:58","22:55:03","22:55:08","22:55:13","22:55:18","22:55:23","22:55:28","22:55:33","22:55:38","22:55:43","22:55:48","22:55:53","22:55:58","22:56:03","22:56:08","22:56:13","22:56:18","22:56:23","22:56:28","22:56:33","22:56:38","22:56:43","22:56:48","22:56:53","22:56:58","22:57:03","22:57:08","22:57:13","22:57:18","22:57:23","22:57:28","22:57:33","22:57:38","22:57:43","22:57:48","22:57:53","22:57:58","22:58:03","22:58:08","22:58:13","22:58:18","22:58:23","22:58:28","22:58:33","22:58:38","22:58:44","22:58:49","22:58:54","22:58:59","22:59:04","22:59:09","22:59:14","22:59:19","22:59:24","22:59:29","22:59:34","22:59:39","22:59:44","22:59:49","22:59:54","22:59:59","23:00:04","23:00:09","23:00:14","23:00:19","23:00:24","23:00:29","23:00:34","23:00:39","23:00:44","23:00:49","23:00:54","23:00:59","23:01:04","23:01:09","23:01:14","23:01:19","23:01:24","23:01:29","23:01:34","23:01:39","23:01:44","23:01:49","23:01:54","23:01:59","23:02:04","23:02:09","23:02:14","23:02:19","23:02:24","23:02:29","23:02:34","23:02:39","23:02:44","23:02:49","23:02:54","23:02:59","23:03:04","23:03:09","23:03:14","23:03:19","23:03:24","23:03:29","23:03:34","23:03:39","23:03:44","23:03:49","23:03:54","23:03:59","23:04:04","23:04:09","23:04:14","23:04:19","23:04:24","23:04:29","23:04:34","23:04:39","23:04:44","23:04:49","23:04:54","23:04:59","23:05:04","23:05:09","23:05:14","23:05:19","23:05:24","23:05:29","23:05:34","23:05:39","23:05:44","23:05:49","23:05:54","23:05:59","23:06:04","23:06:09","23:06:14","23:06:19","23:06:24","23:06:29","23:06:34","23:06:39","23:06:44","23:06:49","23:06:54","23:06:59","23:07:04","23:07:09","23:07:14","23:07:19","23:07:24","23:07:29","23:07:34","23:07:39","23:07:44","23:07:49","23:07:54","23:07:59","23:08:04","23:08:09","23:08:14","23:08:19","23:08:24","23:08:29","23:08:34","23:08:39","23:08:44"];
+    const cpuData = [2.8714285714280265,2.8714285714280265,2.8714285714280265,3.1857142857153917,3.185714285715406,3.185714285715406,3.1285714285713055,3.1285714285713055,3.1285714285713055,3.100000000000975,3.100000000000975,3.100000000000975,3.099999999999241,3.099999999999241,3.099999999999241,3.0380952380957353,3.0380952380957353,3.0380952380957353,3.1285714285713055,3.1285714285713055,3.1285714285713055,3.2170509413999326,3.2170509413999326,3.2170509413999326,2.8857142857131777,2.8857142857131777,2.8857142857131777,2.8837271316054114,2.8837271316054114,2.8837271316054114,3.004761904760798,3.004761904760798,3.004761904760798,3.004761904762532,3.004761904762532,3.004761904762532,3.004761904762532,3.004761904762532,3.004761904762532,2.9408683561413653,2.9408683561413653,2.9408683561413653,3.1829480842320947,3.1829480842320947,3.1829480842320947,3.1428571428581904,3.1428571428581904,3.1428571428581904,3.3448574721176954,3.3448574721176954,3.3448574721176954,3.280952380953849,3.280952380953849,3.280952380953849,3.403517793711657,3.403517793711657,3.403517793711657,3.4666666666661143,3.4666666666661143,3.4666666666661143,3.47819461508314,3.47819461508314,3.47819461508314,3.252380952381799,3.252380952381799,3.252380952381799,3.442857142856951,3.442857142856951,3.442857142856951,3.2571428571446717,3.2571428571446717,3.2571428571446717,3.2380952380948997,3.2380952380948997,3.2380952380948997,3.1906281251483932,3.1906281251483932,3.1906281251483932,3.178956791711613,3.178956791711613,3.178956791711613,3.1523809523822024,3.1523809523822024,3.1523809523822024,3.0827984228860004,3.0827984228860004,3.0827984228860004,2.9428571428572923,2.9428571428572923,2.9428571428572923,2.990476190475661,2.990476190475661,2.990476190475661,2.9714285714276087,2.9714285714276087,2.9714285714276087,2.9105870699831513,2.9105870699831513,2.910587069983123,2.8781774717352278,2.8781774717352278,2.8781774717352278,2.9523809523795705,2.9523809523795705,2.9523809523795705,2.926722413760956,2.926722413760956,2.926722413760956,2.9095238095240887,2.9095238095240887,2.9095238095240887,2.8523809523799883,2.8523809523799883,2.8523809523799883,2.9095238095240887,2.9095238095240887,2.9095238095240887,2.8666666666668874,2.8666666666668874,2.8666666666668874,2.8809523809537865,2.8809523809537865,2.8809523809537865,2.7666666666690247,2.7666666666690247,2.7666666666690247,2.81428571428566,2.81428571428566,2.81428571428566,2.7904761904764825,2.7904761904764825,2.7904761904764825,2.7646829138211473,2.7646829138211473,2.7646829138211473,2.728571428571229,2.728571428571229,2.728571428571229,2.8142857142873936,2.8142857142873936,2.8142857142873936,2.7809523809524563,2.7809523809524563,2.7809523809524563,2.8075388322218515,2.807538832221823,2.807538832221823,2.7619047619044323,2.7619047619044323,2.7619047619044323,2.776190476191317,2.776190476191317,2.776190476191317,2.787698696155246,2.787698696155246,2.787698696155246,2.77142857142843,2.7714285714284443,2.7714285714284443,2.957142857140724,2.957142857140724,2.957142857140724,3.009523809523685,3.009523809523685,3.009523809523685,2.9829423697839417,2.9829423697839417,2.9829423697839417,2.9761904761904816,2.9761904761904816,2.9761904761904816,2.9571428571424576,2.9571428571424576,2.9571428571424576,2.985714285712774,2.985714285712774,2.985714285712774,2.9904761904773807,2.9904761904773807,2.9904761904773807,2.7666666666690247,2.7666666666690247,2.7666666666690247,2.728571428571229,2.728571428571229,2.728571428571229,2.823809523807938,2.823809523807938,2.823809523807938,2.833333333333684,2.833333333333684,2.833333333333684,2.8551565193365605,2.8551565193365605,2.8551565193365605,2.8190476190485185,2.8190476190485185,2.8190476190485185,2.8428571428559763,2.8428571428559763,2.8428571428559763,2.828571428570811,2.828571428570811,2.828571428570811,3.7333333333316716,3.7333333333316716,3.7333333333316716,4.676190476190342,4.676190476190342,4.676190476190342,5.814285714285305,5.814285714285305,5.814285714285305,6.94496033220004,6.94496033220004,6.94496033220004,8.080952380951217,8.080952380951217,8.080952380951217,9.123809523811204,9.123809523811204,9.123809523811204,10.323809523807938,10.323809523807938,10.323809523807938,10.471428571429342,10.471428571429342,10.471428571429342,10.51904761904943,10.51904761904943,10.51904761904943,10.552380952380886,10.552380952380886,10.552380952380886,10.576190476191783,10.576190476191812,10.576190476191812,10.52857142857171,10.52857142857171,10.52857142857171,10.576190476188344,10.576190476188344,10.576190476188344,10.390476190477798,10.390476190477798,10.390476190477798,10.4190476190481,10.4190476190481,10.4190476190481,10.454939382682909,10.454939382682909,10.454939382682909,10.366666666666873,10.366666666666873,10.366666666666873,10.223809523808342,10.223809523808342,10.223809523808342,9.566666666666748,9.566666666666748,9.566666666666748,8.438095238095798,8.438095238095798,8.438095238095798,7.552380952381242,7.552380952381242,7.552380952381242,6.518737202990479,6.518737202990479,6.518737202990479,5.4782517595733395,5.4782517595733395,5.4782517595733395,4.404761904761912,4.404761904761912,4.404761904761912,3.771428571427748,3.771428571427748,3.771428571427748,3.6000000000006196,3.6000000000006196,3.6000000000006196,3.6666666666670125,3.6666666666670125,3.6666666666670125,3.5523809523805454,3.5523809523805454,3.5523809523805454,3.5029238652167294,3.5029238652167294,3.5029238652167294,3.542857142856519,3.542857142856519,3.542857142856519,3.533333333332507,3.533333333332507,3.533333333332507,3.1380952380970513,3.1380952380970513,3.1380952380970513,2.904761904761216,2.904761904761216,2.904761904761216,2.8761904761908994,2.8761904761908994,2.8761904761908994,3.3999999999997357,3.3999999999997357,3.5078947076011957,3.3829537986785283,3.3829537986785283,3.366666666667413,3.2666666666686837,3.2666666666686837,3.3611111111127343,3.2837157033623043,3.2837157033623043,3.3285714285704557,3.3285714285704557,3.3285714285704557,3.271428571429837,3.271428571429837,3.271428571429837,3.257142857142938,3.257142857142938,3.257142857142938,2.6999999999991644,2.6999999999991644,2.6999999999991644,2.7789682199564254,2.7789682199564396,2.7789682199564396,2.7932535260900124,2.7932535260900124,2.7932535260900124,2.8019848186136045,2.8019848186136045,2.8019848186136045,2.838095238094823,2.838095238094823,2.838095238094823,2.8857142857131777,2.8857142857131777,2.8857142857131777,2.8761904761908994,2.8761904761908994,2.8761904761908994,2.9000000000000767,2.9000000000000767,2.9000000000000767,2.8353191043566994,2.8353191043566994,2.8353191043566994,2.8734154309157702,2.8734154309157702,2.8734154309157702,2.8571428571428754,2.8571428571428754,2.8571428571428754,2.8047619047616337];
+    const ramData = [31.91240825886873,31.91240825886873,31.91240825886873,31.911904325162222,31.911904325162222,31.911904325162222,31.911198817973098,31.911198817973098,31.911198817973098,31.91069488426659,31.91069488426659,31.91069488426659,31.909888590336166,31.909888590336166,31.909888590336166,31.90978780359486,31.90978780359486,31.90978780359486,31.909586230112254,31.909586230112254,31.909586230112254,31.909485443370954,31.909485443370954,31.909485443370954,31.909082296405742,31.909082296405742,31.909082296405742,31.90877993618183,31.90877993618183,31.90877993618183,31.908276002475322,31.908276002475322,31.908276002475322,31.908276002475322,31.908276002475322,31.908276002475322,31.9074697085449,31.9074697085449,31.9074697085449,31.907368921803602,31.907368921803602,31.907368921803602,31.906764201355784,31.906764201355784,31.906764201355784,31.91230747212742,31.91230747212742,31.91230747212742,31.898298115086366,31.898298115086366,31.898298115086366,31.89809654160376,31.89809654160376,31.89809654160376,31.89759260789724,31.89759260789724,31.89759260789724,31.897391034414646,31.897391034414646,31.897391034414646,31.896786313966828,31.896786313966828,31.896786313966828,31.896584740484222,31.896584740484222,31.896584740484222,31.80063576276414,31.80063576276414,31.80063576276414,31.80023261579893,31.80023261579893,31.80023261579893,31.799930255575013,31.799930255575013,31.799930255575013,31.799426321868506,31.799426321868506,31.799426321868506,31.798922388161987,31.798922388161987,31.798922388161987,31.79841845445548,31.79841845445548,31.79841845445548,31.797712947266366,31.797712947266366,31.797712947266366,31.79751137378376,31.79751137378376,31.79751137378376,31.797108226818548,31.797108226818548,31.797108226818548,31.79660429311203,31.79660429311203,31.79660429311203,31.79579799918161,31.79579799918161,31.79579799918161,31.80103890972935,31.80103890972935,31.80103890972935,31.7993255351272,31.7993255351272,31.7993255351272,31.799224748385903,31.799224748385903,31.799224748385903,31.79872081467938,31.79872081467938,31.79872081467938,31.79841845445548,31.79841845445548,31.79841845445548,31.79781373400766,31.79781373400766,31.79781373400766,31.79751137378376,31.79751137378376,31.79751137378376,31.796805866594635,31.796805866594635,31.796805866594635,31.79660429311203,31.79660429311203,31.79660429311203,31.796201146146817,31.796201146146817,31.796201146146817,31.795898785922915,31.795898785922915,31.795898785922915,31.795394852216397,31.795394852216397,31.795394852216397,31.795092491992495,31.795092491992495,31.795092491992495,31.79479013176859,31.79479013176859,31.79479013176859,31.794689345027283,31.794689345027283,31.794689345027283,31.794084624579465,31.794084624579465,31.794084624579465,31.793580690872957,31.793580690872957,31.793580690872957,31.792774396942537,31.792774396942537,31.792774396942537,31.79257282345993,31.79257282345993,31.79257282345993,31.79206888975341,31.79206888975341,31.79206888975341,31.791766529529507,31.791766529529507,31.791766529529507,31.7915649560469,31.7915649560469,31.7915649560469,31.79126259582299,31.79126259582299,31.79126259582299,31.79065787537518,31.79065787537518,31.79065787537518,31.79045630189258,31.79045630189258,31.79045630189258,31.78985158144476,31.78985158144476,31.78985158144476,31.78954922122085,31.78954922122085,31.78954922122085,31.78904528751434,31.78904528751434,31.78904528751434,31.78904528751434,31.78904528751434,31.78904528751434,31.788238993583917,31.788238993583917,31.788238993583917,31.78813820684261,31.78813820684261,31.78813820684261,31.79398383783817,31.79398383783817,31.79398383783817,31.793580690872957,31.793580690872957,31.793580690872957,31.792875183683833,31.792875183683833,31.792875183683833,31.792673610201227,31.792673610201227,31.792673610201227,31.80416329870973,31.80416329870973,31.80416329870973,31.809605782740068,31.809605782740068,31.809605782740068,31.8148466932878,31.8148466932878,31.8148466932878,31.82563087460718,31.82563087460718,31.82563087460718,31.835810335478744,31.835810335478744,31.835810335478744,31.840244952096064,31.840244952096064,31.840244952096064,31.85788263182402,31.85788263182402,31.85788263182402,31.875923458517185,31.875923458517185,31.875923458517185,31.90605869416666,31.90605869416666,31.90605869416666,31.923394013670713,31.923394013670713,31.923394013670713,31.941233266881277,31.941233266881277,31.941233266881277,31.96501893782869,31.96501893782869,31.96501893782869,31.995859680667294,31.995859680667294,31.995859680667294,32.01954456487341,32.01954456487341,32.01954456487341,32.04292708885561,32.04292708885561,32.04292708885561,32.06701512002693,32.06701512002693,32.06701512002693,32.09674720871119,32.09674720871119,32.09674720871119,32.108337683961,32.108337683961,32.108337683961,32.11942422550429,32.11942422550429,32.11942422550429,32.11902107853908,32.11902107853908,32.11902107853908,32.324021310348584,32.324021310348584,32.324021310348584,32.34276764423086,32.34276764423086,32.34276764423086,32.361312404630546,32.361312404630546,32.361312404630546,32.36080847092403,32.36080847092403,32.36080847092403,32.22484715690681,32.22484715690681,32.22484715690681,32.2244440099416,32.2244440099416,32.2244440099416,32.22383928949378,32.22383928949378,32.22383928949378,32.22363771601119,32.22363771601119,32.22363771601119,32.22313378230467,32.22313378230467,32.22313378230467,32.222932208822066,32.222932208822066,32.222932208822066,32.227870759145894,32.227870759145894,32.227870759145894,32.22746761218068,32.22746761218068,32.22746761218068,32.22666131825026,32.22666131825026,32.22666131825026,32.22635895802636,32.22635895802636,32.22635895802636,32.22545187735463,32.22545187735463,32.22545187735463,32.22504873038942,32.22504873038942,32.22504873038942,32.224544796682906,32.224544796682906,32.224544796682906,32.2243432232003,32.2243432232003,32.22363771601119,32.22363771601119,32.22363771601119,32.223436142528584,32.223436142528584,32.223436142528584,32.222932208822066,32.222932208822066,32.222932208822066,32.22262984859816,32.22262984859816,32.22262984859816,32.22172276792643,32.22172276792643,32.22172276792643,32.22131962096122,32.22131962096122,32.22131962096122,32.22061411377211,32.22061411377211,32.22061411377211,32.22000939332429,32.22000939332429,32.22000939332429,32.21950545961778,32.21950545961778,32.21950545961778,32.219203099393866,32.219203099393866,32.219203099393866,32.22525030387202,32.22525030387202,32.22525030387202,32.22504873038942,32.22504873038942,32.22504873038942,32.2244440099416,32.2244440099416,32.2244440099416,32.22978570723064,32.22978570723064,32.22978570723064,32.229281773524136];
+
+    /* --- CHART CPU --- */
+    new Chart(document.getElementById('cpuChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'CPU (%)',
+          data: cpuData,
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+
+    /* --- CHART RAM --- */
+    new Chart(document.getElementById('ramChart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'RAM (%)',
+          data: ramData,
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  </script>
+
+</body>
+</html>
